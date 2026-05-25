@@ -4,10 +4,21 @@ using PopayanFilms.Core.Modules.Movies.Application;
 using PopayanFilms.Core.Modules.Movies.Infrastructure;
 using PopayanFilms.Core.Modules.Salas.Application;
 using PopayanFilms.Core.Modules.Salas.Infrastructure;
+using PopayanFilms.Core.Modules.Horarios.Application;
+using PopayanFilms.Core.Modules.Horarios.Infrastructure;
+using PopayanFilms.Core.Modules.ListaPrecios.Application;
+using PopayanFilms.Core.Modules.ListaPrecios.Infrastructure;
 using PopayanFilms.Api.Endpoints;
+using PopayanFilms.Core.Modules.Asientos.Application;
+using PopayanFilms.Core.Modules.Asientos.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -17,17 +28,21 @@ var conn = builder.Configuration.GetConnectionString("Default")
 builder.Services.AddSingleton<IDapperHelper>(_ => new DapperHelper(conn));
 builder.Services.AddTransient<IMovieRepository, MovieRepository>();
 builder.Services.AddTransient<ISalaRepository, SalaRepository>();
+builder.Services.AddTransient<IHorarioRepository, HorarioRepository>();
+builder.Services.AddTransient<IListaPrecioRepository, ListaPrecioRepository>();
+builder.Services.AddTransient<IAsientoRepository, AsientoRepository>();
 
 var app = builder.Build();
 
+app.UseCors();
+app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// --- Crear tablas si no existen ---
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<IDapperHelper>();
-    
+
     await db.ExecuteAsync("""
         CREATE TABLE IF NOT EXISTS Movies (
             Id            INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,10 +63,41 @@ using (var scope = app.Services.CreateScope())
             Tipo      TEXT    NOT NULL
         );
         """);
+
+    await db.ExecuteAsync("""
+        CREATE TABLE IF NOT EXISTS Horarios (
+            Id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            FechaHora   TEXT    NOT NULL,
+            IdSala      INTEGER NOT NULL,
+            IdPelicula  INTEGER NOT NULL,
+            Estado      TEXT    NOT NULL DEFAULT 'activo'
+        );
+        """);
+
+    await db.ExecuteAsync("""
+        CREATE TABLE IF NOT EXISTS ListaPrecios (
+            Id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            Descripcion TEXT    NOT NULL,
+            Precio      REAL    NOT NULL,
+            Tipo        TEXT    NOT NULL
+        );
+        """);
+
+        await db.ExecuteAsync("""
+    CREATE TABLE IF NOT EXISTS Asientos (
+        Id      INTEGER PRIMARY KEY AUTOINCREMENT,
+        Numero  INTEGER NOT NULL,
+        Fila    TEXT    NOT NULL,
+        IdSala  INTEGER NOT NULL,
+        Estado  TEXT    NOT NULL DEFAULT 'disponible'
+    );
+    """);
 }
 
-// --- Endpoints ---
 app.MapMovieEndpoints();
 app.MapSalaEndpoints();
+app.MapHorarioEndpoints();
+app.MapListaPrecioEndpoints();
+app.MapAsientoEndpoints();
 
 app.Run();
