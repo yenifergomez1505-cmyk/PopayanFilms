@@ -1,0 +1,13 @@
+## Carpetas generadas - NO subir al repo
+bin/
+obj/
+.vs/
+
+## Base de datos local
+*.db
+*.db-shm
+*.db-wal
+
+## Archivos de usuario
+*.user
+*.suo
