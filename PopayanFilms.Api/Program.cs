@@ -11,6 +11,10 @@ using PopayanFilms.Core.Modules.ListaPrecios.Infrastructure;
 using PopayanFilms.Api.Endpoints;
 using PopayanFilms.Core.Modules.Asientos.Application;
 using PopayanFilms.Core.Modules.Asientos.Infrastructure;
+using PopayanFilms.Core.Modules.Reservas.Application;
+using PopayanFilms.Core.Modules.Reservas.Infrastructure;
+using PopayanFilms.Core.Modules.Tickets.Application;
+using PopayanFilms.Core.Modules.Tickets.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +35,8 @@ builder.Services.AddTransient<ISalaRepository, SalaRepository>();
 builder.Services.AddTransient<IHorarioRepository, HorarioRepository>();
 builder.Services.AddTransient<IListaPrecioRepository, ListaPrecioRepository>();
 builder.Services.AddTransient<IAsientoRepository, AsientoRepository>();
+builder.Services.AddTransient<IReservaRepository, ReservaRepository>();
+builder.Services.AddTransient<ITicketRepository, TicketRepository>();
 
 var app = builder.Build();
 
@@ -92,6 +98,27 @@ using (var scope = app.Services.CreateScope())
         Estado  TEXT    NOT NULL DEFAULT 'disponible'
     );
     """);
+
+    await db.ExecuteAsync("""
+    CREATE TABLE IF NOT EXISTS Reservas (
+        Id            INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdHorario     INTEGER NOT NULL,
+        IdAsiento     INTEGER NOT NULL,
+        IdListaPrecio INTEGER NOT NULL,
+        FechaReserva  TEXT    NOT NULL,
+        Estado        TEXT    NOT NULL DEFAULT 'pendiente'
+    );
+    """);
+
+    await db.ExecuteAsync("""
+    CREATE TABLE IF NOT EXISTS Tickets (
+        Id           INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdReserva    INTEGER NOT NULL,
+        Codigo       TEXT    NOT NULL UNIQUE,
+        FechaEmision TEXT    NOT NULL,
+        Estado       TEXT    NOT NULL DEFAULT 'activo'
+    );
+    """);
 }
 
 app.MapMovieEndpoints();
@@ -99,5 +126,6 @@ app.MapSalaEndpoints();
 app.MapHorarioEndpoints();
 app.MapListaPrecioEndpoints();
 app.MapAsientoEndpoints();
-
+app.MapReservaEndpoints();
+app.MapTicketEndpoints();
 app.Run();

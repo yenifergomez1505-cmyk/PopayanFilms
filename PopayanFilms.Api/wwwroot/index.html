@@ -3,284 +3,274 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PopayanFilms</title>
+  <title>PopayanFilms — Sistema de Gestión</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<header>
-  <div class="header-left">
-    <div class="logo-icon">🎬</div>
-    <div class="header-titles">
-      <h1>PopayanFilms</h1>
-      <p>Sistema de Gestión de Cine</p>
-    </div>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>PopayanFilms</h1>
+    <p>Sistema de Gestión</p>
   </div>
-  <div class="header-right">Popayán · Cauca · Colombia</div>
-</header>
-
-<div class="curtain"></div>
-
-<nav>
-  <button class="active" onclick="showSection('movies', this)">🎥 Películas</button>
-  <button onclick="showSection('salas', this)">🎭 Salas</button>
-  <button onclick="showSection('horarios', this)">🕐 Horarios</button>
-  <button onclick="showSection('listaprecios', this)">💰 Precios</button>
-  <button onclick="showSection('asientos', this)">💺 Asientos</button>
-</nav>
-
-<main>
-
-  <!-- MOVIES -->
-  <div id="movies" class="section active">
-    <div class="section-header">
-      <div class="dot"></div>
-      <h2>Películas</h2>
-      <div class="line"></div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Principal</div>
+    <div class="nav-item active" onclick="showSection('movies', this)">
+      <span class="icon">🎬</span> Películas
     </div>
-    <div class="form-card">
-      <div class="form-card-title">— Registrar / Editar Película</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Título</label>
-          <input id="m-titulo" type="text" placeholder="Ej: El Padrino" />
-        </div>
-        <div class="form-group">
-          <label>Género</label>
-          <input id="m-genero" type="text" placeholder="Ej: Drama" />
-        </div>
-        <div class="form-group">
-          <label>Duración (min)</label>
-          <input id="m-duracion" type="number" placeholder="Ej: 120" />
-        </div>
-        <div class="form-group">
-          <label>Clasificación</label>
-          <select id="m-clasificacion">
-            <option value="">Seleccionar...</option>
-            <option>G</option><option>PG</option>
-            <option>PG-13</option><option>R</option><option>NC-17</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Fecha Estreno</label>
-          <input id="m-fecha" type="date" />
-        </div>
-        <div class="form-group">
-          <label>Estado</label>
-          <select id="m-estado">
-            <option value="activa">Activa</option>
-            <option value="inactiva">Inactiva</option>
-          </select>
-        </div>
-      </div>
-      <input type="hidden" id="m-id" value="0" />
-      <div class="btn-group">
-        <button class="btn btn-primary" onclick="saveMovie()">Guardar</button>
-        <button class="btn btn-secondary" onclick="clearMovieForm()">Limpiar</button>
-      </div>
+    <div class="nav-item" onclick="showSection('salas', this)">
+      <span class="icon">🎭</span> Salas
     </div>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th><th>Título</th><th>Género</th>
-            <th>Duración</th><th>Clasificación</th><th>Estado</th><th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="movies-tbody">
-          <tr><td colspan="7" class="empty">Cargando...</td></tr>
-        </tbody>
-      </table>
+    <div class="nav-section">Programación</div>
+    <div class="nav-item" onclick="showSection('horarios', this)">
+      <span class="icon">🕐</span> Horarios
+    </div>
+    <div class="nav-item" onclick="showSection('asientos', this)">
+      <span class="icon">💺</span> Asientos
+    </div>
+    <div class="nav-section">Comercial</div>
+    <div class="nav-item" onclick="showSection('listaprecios', this)">
+      <span class="icon">💰</span> Lista de Precios
+    </div>
+    <div class="nav-item" onclick="showSection('reservas', this)">
+      <span class="icon">🎟</span> Reservas
+    </div>
+    <div class="nav-item" onclick="showSection('tickets', this)">
+      <span class="icon">🎫</span> Tickets
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    Popayán · Cauca · Colombia
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="topbar-title">Películas</div>
+      <div class="topbar-sub">Gestión de contenido</div>
+    </div>
+    <div class="topbar-right">
+      <div class="api-status">
+        <div class="api-dot"></div>
+        API Conectada
+      </div>
     </div>
   </div>
 
-  <!-- SALAS -->
-  <div id="salas" class="section">
-    <div class="section-header">
-      <div class="dot"></div>
-      <h2>Salas</h2>
-      <div class="line"></div>
-    </div>
-    <div class="form-card">
-      <div class="form-card-title">— Registrar / Editar Sala</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Nombre</label>
-          <input id="s-nombre" type="text" placeholder="Ej: Sala 1" />
-        </div>
-        <div class="form-group">
-          <label>Capacidad</label>
-          <input id="s-capacidad" type="number" placeholder="Ej: 100" />
-        </div>
-        <div class="form-group">
-          <label>Tipo</label>
-          <select id="s-tipo">
-            <option value="">Seleccionar...</option>
-            <option>2D</option><option>3D</option>
-            <option>IMAX</option><option>4DX</option>
-          </select>
-        </div>
-      </div>
-      <input type="hidden" id="s-id" value="0" />
-      <div class="btn-group">
-        <button class="btn btn-primary" onclick="saveSala()">Guardar</button>
-        <button class="btn btn-secondary" onclick="clearSalaForm()">Limpiar</button>
-      </div>
-    </div>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr><th>#</th><th>Nombre</th><th>Capacidad</th><th>Tipo</th><th>Acciones</th></tr>
-        </thead>
-        <tbody id="salas-tbody">
-          <tr><td colspan="5" class="empty">Cargando...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <div class="content">
 
-  <!-- HORARIOS -->
-  <div id="horarios" class="section">
-    <div class="section-header">
-      <div class="dot"></div>
-      <h2>Horarios</h2>
-      <div class="line"></div>
-    </div>
-    <div class="form-card">
-      <div class="form-card-title">— Registrar / Editar Horario</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Fecha y Hora</label>
-          <input id="h-fechahora" type="datetime-local" />
+    <!-- MOVIES -->
+    <div id="movies" class="section active">
+      <div class="section-header">
+        <div><h2>Películas</h2><span>Gestión del catálogo de películas</span></div>
+      </div>
+      <div class="form-card">
+        <div class="form-card-header">
+          <span>✦</span>
+          <h3 id="movie-form-title">Nueva Película</h3>
         </div>
-        <div class="form-group">
-          <label>ID Sala</label>
-          <input id="h-idsala" type="number" placeholder="Ej: 1" />
+        <div class="form-grid">
+          <div class="form-group"><label>Título</label><input id="m-titulo" type="text" placeholder="Ej: El Padrino" /></div>
+          <div class="form-group"><label>Género</label><input id="m-genero" type="text" placeholder="Ej: Drama" /></div>
+          <div class="form-group"><label>Duración (min)</label><input id="m-duracion" type="number" placeholder="120" /></div>
+          <div class="form-group"><label>Clasificación</label>
+            <select id="m-clasificacion">
+              <option value="">Seleccionar...</option>
+              <option>G</option><option>PG</option><option>PG-13</option><option>R</option><option>NC-17</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Fecha Estreno</label><input id="m-fecha" type="date" /></div>
+          <div class="form-group"><label>Estado</label>
+            <select id="m-estado"><option value="activa">Activa</option><option value="inactiva">Inactiva</option></select>
+          </div>
         </div>
-        <div class="form-group">
-          <label>ID Película</label>
-          <input id="h-idpelicula" type="number" placeholder="Ej: 1" />
-        </div>
-        <div class="form-group">
-          <label>Estado</label>
-          <select id="h-estado">
-            <option value="activo">Activo</option>
-            <option value="cancelado">Cancelado</option>
-          </select>
+        <input type="hidden" id="m-id" value="0" />
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="saveMovie()">💾 Guardar</button>
+          <button class="btn btn-secondary" onclick="clearMovieForm()">✕ Limpiar</button>
         </div>
       </div>
-      <input type="hidden" id="h-id" value="0" />
-      <div class="btn-group">
-        <button class="btn btn-primary" onclick="saveHorario()">Guardar</button>
-        <button class="btn btn-secondary" onclick="clearHorarioForm()">Limpiar</button>
+      <div class="table-wrapper">
+        <div class="table-header">
+          <h3>Registro de Películas</h3>
+          <span class="table-count" id="movies-count">0</span>
+        </div>
+        <table>
+          <thead><tr><th>#</th><th>Título</th><th>Género</th><th>Duración</th><th>Clasificación</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="movies-tbody"><tr><td colspan="7" class="empty">Cargando...</td></tr></tbody>
+        </table>
       </div>
     </div>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr><th>#</th><th>Fecha y Hora</th><th>ID Sala</th><th>ID Película</th><th>Estado</th><th>Acciones</th></tr>
-        </thead>
-        <tbody id="horarios-tbody">
-          <tr><td colspan="6" class="empty">Cargando...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
 
-  <!-- LISTA PRECIOS -->
-  <div id="listaprecios" class="section">
-    <div class="section-header">
-      <div class="dot"></div>
-      <h2>Lista de Precios</h2>
-      <div class="line"></div>
-    </div>
-    <div class="form-card">
-      <div class="form-card-title">— Registrar / Editar Precio</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Descripción</label>
-          <input id="p-descripcion" type="text" placeholder="Ej: Adulto" />
+    <!-- SALAS -->
+    <div id="salas" class="section">
+      <div class="section-header"><div><h2>Salas</h2><span>Gestión de salas de cine</span></div></div>
+      <div class="form-card">
+        <div class="form-card-header"><span>✦</span><h3>Nueva Sala</h3></div>
+        <div class="form-grid">
+          <div class="form-group"><label>Nombre</label><input id="s-nombre" type="text" placeholder="Ej: Sala 1" /></div>
+          <div class="form-group"><label>Capacidad</label><input id="s-capacidad" type="number" placeholder="100" /></div>
+          <div class="form-group"><label>Tipo</label>
+            <select id="s-tipo"><option value="">Seleccionar...</option><option>2D</option><option>3D</option><option>IMAX</option><option>4DX</option></select>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Precio ($)</label>
-          <input id="p-precio" type="number" placeholder="Ej: 15000" />
-        </div>
-        <div class="form-group">
-          <label>Tipo</label>
-          <select id="p-tipo">
-            <option value="">Seleccionar...</option>
-            <option>General</option><option>VIP</option><option>Preferencial</option>
-          </select>
+        <input type="hidden" id="s-id" value="0" />
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="saveSala()">💾 Guardar</button>
+          <button class="btn btn-secondary" onclick="clearSalaForm()">✕ Limpiar</button>
         </div>
       </div>
-      <input type="hidden" id="p-id" value="0" />
-      <div class="btn-group">
-        <button class="btn btn-primary" onclick="savePrecio()">Guardar</button>
-        <button class="btn btn-secondary" onclick="clearPrecioForm()">Limpiar</button>
+      <div class="table-wrapper">
+        <div class="table-header"><h3>Registro de Salas</h3><span class="table-count" id="salas-count">0</span></div>
+        <table>
+          <thead><tr><th>#</th><th>Nombre</th><th>Capacidad</th><th>Tipo</th><th>Acciones</th></tr></thead>
+          <tbody id="salas-tbody"><tr><td colspan="5" class="empty">Cargando...</td></tr></tbody>
+        </table>
       </div>
     </div>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr><th>#</th><th>Descripción</th><th>Precio</th><th>Tipo</th><th>Acciones</th></tr>
-        </thead>
-        <tbody id="precios-tbody">
-          <tr><td colspan="5" class="empty">Cargando...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
 
-  <!-- ASIENTOS -->
-  <div id="asientos" class="section">
-    <div class="section-header">
-      <div class="dot"></div>
-      <h2>Asientos</h2>
-      <div class="line"></div>
-    </div>
-    <div class="form-card">
-      <div class="form-card-title">— Registrar / Editar Asiento</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Número</label>
-          <input id="a-numero" type="number" placeholder="Ej: 1" />
+    <!-- HORARIOS -->
+    <div id="horarios" class="section">
+      <div class="section-header"><div><h2>Horarios</h2><span>Programación de funciones</span></div></div>
+      <div class="form-card">
+        <div class="form-card-header"><span>✦</span><h3>Nuevo Horario</h3></div>
+        <div class="form-grid">
+          <div class="form-group"><label>Fecha y Hora</label><input id="h-fechahora" type="datetime-local" /></div>
+          <div class="form-group"><label>ID Sala</label><input id="h-idsala" type="number" placeholder="1" /></div>
+          <div class="form-group"><label>ID Película</label><input id="h-idpelicula" type="number" placeholder="1" /></div>
+          <div class="form-group"><label>Estado</label>
+            <select id="h-estado"><option value="activo">Activo</option><option value="cancelado">Cancelado</option></select>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Fila</label>
-          <input id="a-fila" type="text" placeholder="Ej: A" maxlength="2" />
-        </div>
-        <div class="form-group">
-          <label>ID Sala</label>
-          <input id="a-idsala" type="number" placeholder="Ej: 1" />
-        </div>
-        <div class="form-group">
-          <label>Estado</label>
-          <select id="a-estado">
-            <option value="disponible">Disponible</option>
-            <option value="ocupado">Ocupado</option>
-            <option value="reservado">Reservado</option>
-          </select>
+        <input type="hidden" id="h-id" value="0" />
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="saveHorario()">💾 Guardar</button>
+          <button class="btn btn-secondary" onclick="clearHorarioForm()">✕ Limpiar</button>
         </div>
       </div>
-      <input type="hidden" id="a-id" value="0" />
-      <div class="btn-group">
-        <button class="btn btn-primary" onclick="saveAsiento()">Guardar</button>
-        <button class="btn btn-secondary" onclick="clearAsientoForm()">Limpiar</button>
+      <div class="table-wrapper">
+        <div class="table-header"><h3>Registro de Horarios</h3><span class="table-count" id="horarios-count">0</span></div>
+        <table>
+          <thead><tr><th>#</th><th>Fecha y Hora</th><th>ID Sala</th><th>ID Película</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="horarios-tbody"><tr><td colspan="6" class="empty">Cargando...</td></tr></tbody>
+        </table>
       </div>
     </div>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr><th>#</th><th>Número</th><th>Fila</th><th>ID Sala</th><th>Estado</th><th>Acciones</th></tr>
-        </thead>
-        <tbody id="asientos-tbody">
-          <tr><td colspan="6" class="empty">Cargando...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
 
-</main>
+    <!-- ASIENTOS -->
+    <div id="asientos" class="section">
+      <div class="section-header"><div><h2>Asientos</h2><span>Gestión de asientos por sala</span></div></div>
+      <div class="form-card">
+        <div class="form-card-header"><span>✦</span><h3>Nuevo Asiento</h3></div>
+        <div class="form-grid">
+          <div class="form-group"><label>Número</label><input id="a-numero" type="number" placeholder="1" /></div>
+          <div class="form-group"><label>Fila</label><input id="a-fila" type="text" placeholder="A" maxlength="2" /></div>
+          <div class="form-group"><label>ID Sala</label><input id="a-idsala" type="number" placeholder="1" /></div>
+          <div class="form-group"><label>Estado</label>
+            <select id="a-estado"><option value="disponible">Disponible</option><option value="ocupado">Ocupado</option><option value="reservado">Reservado</option></select>
+          </div>
+        </div>
+        <input type="hidden" id="a-id" value="0" />
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="saveAsiento()">💾 Guardar</button>
+          <button class="btn btn-secondary" onclick="clearAsientoForm()">✕ Limpiar</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <div class="table-header"><h3>Registro de Asientos</h3><span class="table-count" id="asientos-count">0</span></div>
+        <table>
+          <thead><tr><th>#</th><th>Número</th><th>Fila</th><th>ID Sala</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="asientos-tbody"><tr><td colspan="6" class="empty">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LISTA PRECIOS -->
+    <div id="listaprecios" class="section">
+      <div class="section-header"><div><h2>Lista de Precios</h2><span>Tarifas y categorías</span></div></div>
+      <div class="form-card">
+        <div class="form-card-header"><span>✦</span><h3>Nuevo Precio</h3></div>
+        <div class="form-grid">
+          <div class="form-group"><label>Descripción</label><input id="p-descripcion" type="text" placeholder="Ej: Adulto" /></div>
+          <div class="form-group"><label>Precio ($)</label><input id="p-precio" type="number" placeholder="15000" /></div>
+          <div class="form-group"><label>Tipo</label>
+            <select id="p-tipo"><option value="">Seleccionar...</option><option>General</option><option>VIP</option><option>Preferencial</option></select>
+          </div>
+        </div>
+        <input type="hidden" id="p-id" value="0" />
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="savePrecio()">💾 Guardar</button>
+          <button class="btn btn-secondary" onclick="clearPrecioForm()">✕ Limpiar</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <div class="table-header"><h3>Registro de Precios</h3><span class="table-count" id="precios-count">0</span></div>
+        <table>
+          <thead><tr><th>#</th><th>Descripción</th><th>Precio</th><th>Tipo</th><th>Acciones</th></tr></thead>
+          <tbody id="precios-tbody"><tr><td colspan="5" class="empty">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RESERVAS -->
+    <div id="reservas" class="section">
+      <div class="section-header"><div><h2>Reservas</h2><span>Gestión de reservas</span></div></div>
+      <div class="form-card">
+        <div class="form-card-header"><span>✦</span><h3>Nueva Reserva</h3></div>
+        <div class="form-grid">
+          <div class="form-group"><label>ID Horario</label><input id="r-idhorario" type="number" placeholder="1" /></div>
+          <div class="form-group"><label>ID Asiento</label><input id="r-idasiento" type="number" placeholder="1" /></div>
+          <div class="form-group"><label>ID Lista Precio</label><input id="r-idlistaprecio" type="number" placeholder="1" /></div>
+          <div class="form-group"><label>Estado</label>
+            <select id="r-estado"><option value="pendiente">Pendiente</option><option value="confirmada">Confirmada</option><option value="cancelada">Cancelada</option></select>
+          </div>
+        </div>
+        <input type="hidden" id="r-id" value="0" />
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="saveReserva()">💾 Guardar</button>
+          <button class="btn btn-secondary" onclick="clearReservaForm()">✕ Limpiar</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <div class="table-header"><h3>Registro de Reservas</h3><span class="table-count" id="reservas-count">0</span></div>
+        <table>
+          <thead><tr><th>#</th><th>ID Horario</th><th>ID Asiento</th><th>ID Precio</th><th>Fecha Reserva</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="reservas-tbody"><tr><td colspan="7" class="empty">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TICKETS -->
+    <div id="tickets" class="section">
+      <div class="section-header"><div><h2>Tickets</h2><span>Gestión de tickets emitidos</span></div></div>
+      <div class="form-card">
+        <div class="form-card-header"><span>✦</span><h3>Nuevo Ticket</h3></div>
+        <div class="form-grid">
+          <div class="form-group"><label>ID Reserva</label><input id="t-idreserva" type="number" placeholder="1" /></div>
+          <div class="form-group"><label>Estado</label>
+            <select id="t-estado"><option value="activo">Activo</option><option value="usado">Usado</option><option value="cancelado">Cancelado</option></select>
+          </div>
+        </div>
+        <input type="hidden" id="t-id" value="0" />
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="saveTicket()">💾 Emitir Ticket</button>
+          <button class="btn btn-secondary" onclick="clearTicketForm()">✕ Limpiar</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <div class="table-header"><h3>Registro de Tickets</h3><span class="table-count" id="tickets-count">0</span></div>
+        <table>
+          <thead><tr><th>#</th><th>Código</th><th>ID Reserva</th><th>Fecha Emisión</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="tickets-tbody"><tr><td colspan="6" class="empty">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <div id="toast" class="toast"></div>
 <script src="app.js"></script>
