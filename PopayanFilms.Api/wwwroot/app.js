@@ -385,4 +385,4 @@ function clearTicketForm() {
 }
 
 // Cargar al inicio
-loadMovies();
+loadMovies();Ñ
