@@ -42,6 +42,7 @@ var app = builder.Build();
 
 app.UseCors();
 app.UseStaticFiles();
+app.MapFallbackToFile("index.html");
 app.UseSwagger();
 app.UseSwaggerUI();
 
